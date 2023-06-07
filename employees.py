@@ -6,6 +6,7 @@ connection = sqlite3.connect('bikeshop.sqlite')
 
 cursor = connection.cursor()
 
+cursor.execute("DROP TABLE EMPLOYEES")
 cursor.execute('CREATE TABLE Employees(employee_id INTEGER primary key, first_name TEXT, last_name TEXT, email TEXT, phone INTEGER)')
 
 NUM_EMPLOYEES = 10

@@ -2,18 +2,21 @@ import sqlite3
 import random as rd
 import names
 
-NUM_CUSTOMERS = 49
+NUM_CUSTOMERS = 48
 
 connection = sqlite3.connect('bikeshop.sqlite')
 
 cursor = connection.cursor()
 
-cursor.execute('CREATE TABLE Customers(customer_id INTEGER primary key, customer_first_name TEXT, customer_last_name TEXT, customer_email TEXT, customer_phone INTEGER)')
+cursor.execute("DROP TABLE Customers")
+cursor.execute('CREATE TABLE Customers(customer_id INTEGER, customer_first_name TEXT, customer_last_name TEXT, customer_email TEXT, customer_phone INTEGER, PRIMARY KEY (customer_id))')
+
+cursor.execute("INSERT INTO Customers VALUES(?,?,?,?,?)", (0, None, None, None, None))
 
 potential_domains = ['gmail.com', 'hotmail.com', 'telus.net', 'shaw.ca', 'outlook.com', 'yahoo.com', 'live.ca', 'ucalgary.ca', 'icloud.com'] #list of random domains to be used to generate random emails
 
 for i in range(NUM_CUSTOMERS):
-    customer_id = i
+    customer_id = i + 1
 
     rand_first_name = names.get_first_name() #generates a random first name for the user
 
@@ -29,10 +32,6 @@ cursor.execute('SELECT max(customer_id) FROM Customers')
 largest_customer_id = cursor.fetchone()[0]  #accesses first element of tuple returned(48,) which is 48
 
 cursor.execute('INSERT INTO Customers VALUES(?,?,?,?,?)', (largest_customer_id + 1, 'Reid','Moline', None, 4032737373))
-
-cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
-
-print(cursor.fetchall())
 
 connection.commit()
 connection.close()

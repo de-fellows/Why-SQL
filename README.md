@@ -53,13 +53,15 @@ With this simple one table database I encourage you to practice getting comforta
 
 With this intro into SQL using only a single table database I couldn't help but think, "Why not just use a CSV? What is the point of SQL?". To answer this question lets move forward into a motivating example relavent to a real world system.
 
+NOTE: I found it helpful to install the VSCode extension SQLite Viewer by Florian Klampfer to be able to click on and view the contents of .sqlite files.
+
 ## Motivating Example
 
 For this motivating example, I looked to create a scenario around a hobby of mine; bikes, and more specifically around the backend behind the business logic of a bike shop. In this I not only look to look deeper into SQL but also to "make the game worth playing" by looking into an actual real world scenario. Lets say you are the store manager of the Calgary Bike Shop and need a system to process transactions and record transactions with customers and track sales metrics. If we were to generate a mock of what this table would look like using the code in motivating-example-large-table-generator.py, it would look something like the following:
 
 ![Motivating Example Single Large Table](motivating-example-large-table.png)
 
-With this very over simplified table of one item transactions, a flaw begins to arrise by changing the constant NUM_SALES to a larger number to mimic a busy sales day. In doing this, a simple 9 column table becomes super long and as such becomes more difficult to sift through for data. Furthermore, this table only considers simple one item transactions of a business; not taking into account transactions with more than one item, including non-bike products like accessories, parts, tools and even multiple bike purchases. If we were to continue to add all of this to one table and format it as a CSV, it would be a horrendously large and jumbled up array of data. This is where a relational database structure can help.
+With this very over simplified table of one item transactions, a flaw begins to arrise by changing the constant NUM_SALES to a larger number to mimic a busy sales day. In doing this, a simple 9 column table becomes super long and as such becomes more difficult to sift through for data. Furthermore, this table only considers simple one item transactions of a business; not taking into account transactions with more than one item. On top of that, there is way more information we can include about products, employees, and customers that if added would make this table huge! If we were to continue to add all of this to one table and format it as a CSV, it would be a horrendously large and jumbled up array of data. This is where a relational database structure can help.
 
 Focussing only on the retail transactions and stock side of the business, we can begin to seperate the portions of a transaction into four seperate categories; the customer, the salesperson, the transacitons, and the products. Although all four of these things are seperate entities, they all relate to each other in one way or another. In formatting four seperate tables for these items it can allow for us to organize a better system for storing transaction records.
 
@@ -71,11 +73,24 @@ In the code customers.py, notice that I included the query:
 
     cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
 
-I included this to show the NULL value that would show up if a customer would opt-out of giving their email in python giving a value of None, a common practice in retail settings. Even with the customer opting out of giving their email you can still add them to the database.
+In this table, notice how I made the first entry, Customer ID 0, be all NULL values (like Python None values). I reserved this to be a guest customer profile, for in real world application not every customer would want to be entered in the system and as such this would allow transactions to occur with no customer profile. Furthermore some may opt-in to everything but giving their email like Customer ID 49. You can check this using the sqlite3 terminal by typing the following in the command prompt:
 
-Moving on from this to the creation of an Employee table seen in the file employees.py. The created table looks like the following:
+    sqlite3 bikeshop.sqlite
+    SELECT * FROM Customers WHERE customer_email IS NULL;
+
+Or you can access a list of all row tuples where this is the case using these lines of code into customers.py:
+
+    cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
+
+    all_rows_with_no_email = cursor.fetchall()
+
+
+Moving on from this to the creation of an Employee table seen in the file employees.py. For a basic record of all employees I have included an employee id, first name, last name, work email, and phone number. The table generated using the code in employees.py is of the following form:
 
 ![Generated Employees Table](employees-table.png)
 
-Now Lastly we can generate a table for the products in store. Keeping it somewhat small, given all products are being generated by myself in products.py, the products table would be something like the following:
+Now we can generate a table for the products in store. Keeping it somewhat small, given all products are being generated by myself in products.py, For the products, I made it so that each product will have it's own 12 digit universal product code (UPC), a description of the product, the quantity of the product on hand, the vendor which the product is ordered from, the manufactuer's suggested retail price (MSRP), the business cost of the unit. With this all considered, using the code in the file products.py, the generated table is of the following form:
 
+![Generated Products Table](products-table.png)
+
+NEXT: Handling transactions
