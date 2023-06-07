@@ -45,7 +45,7 @@ For many, SQLite may comes prepackaged with Python, however for some like myself
 
 If this isn't the case, then head over to www.sqlite.org and head to the downloads tab. From there find the respective precompiled binaries for your respective operating system, download them and place them in the same folder python is installed in. To check where python is in your file explorer type "where python" into your command prompt.
 
-To exit the SQLite terminal type in .exit. SQLite terminals have many other "dot" commands to perform certain funcitons all listed in the documentation below: https://sqlite.org/cli.html. The sqlite3 terminal will not be looked at in this post but it is a handy way of accessing what is in certain tables in your database.
+To exit the SQLite terminal type in .exit. SQLite terminals have many other "dot" commands to perform certain funcitons all listed in the documentation below: https://sqlite.org/cli.html. The sqlite3 terminal serves as a useful way to query a database that was altered in a python file to see the outcome, hence I reccomend trying out some queries in the terminal. NOTE: all queries in the terminal must be followed by a semi colon to be executed. 
 
 Now with SQLite installed and ready to go, we can execute SQL queries within a python document by importing sqlite3 and setting up two things; a connection and a cursor. The connection and cursor serve to connect the python document to the database and to be able to execute SQL queries on said database. An example of a simple interaction to open a new sqlite database file named introduction.sqlite and create a table called students is attached in the python document sqlite-intro.py. 
 
