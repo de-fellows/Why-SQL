@@ -1,21 +1,21 @@
 Transaction Number,Time of Purchase,Sold By,Item Code,Item Description,MSRP (CAD),Cost (CAD),Customer,Payment Type
-1,2023-05-15 10:00:00,Clarke Kent,B1,2023 Kona Process 153,4299.99,2499.97,Tiger Woods,Visa
-2,2023-05-15 10:10:00,Bruce Wayne,B1,2023 Kona Process 153,4299.99,2499.97,Willie Mays,Cash
-3,2023-05-15 10:20:00,Reid Moline,B3,2023 Commencal Supreme DH,5299.99,2298.97,Tiger Woods,Visa
-4,2023-05-15 10:30:00,Reid Moline,B3,2023 Commencal Supreme DH,5299.99,2298.97,Wayne Gretzky,Visa
-5,2023-05-15 10:40:00,Peter Parker,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Willie Mays,MC
-6,2023-05-15 10:50:00,John Doe,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Willie Mays,MC
-7,2023-05-15 11:00:00,John Doe,B3,2023 Commencal Supreme DH,5299.99,2298.97,Willie Mays,Visa
-8,2023-05-15 11:10:00,Peter Parker,B2,2022 Trek Checkpoint AL5,2899.99,1349.97,Willie Mays,Debit
-9,2023-05-15 11:20:00,John Doe,B5,2023 Specialized Turbo Levo SL,11599.99,8000.97,Tiger Woods,AMEX
-10,2023-05-15 11:30:00,John Doe,B3,2023 Commencal Supreme DH,5299.99,2298.97,Tiger Woods,Debit
-11,2023-05-15 11:40:00,Peter Parker,B5,2023 Specialized Turbo Levo SL,11599.99,8000.97,Micheal Jordan,Visa
-12,2023-05-15 11:50:00,Reid Moline,B5,2023 Specialized Turbo Levo SL,11599.99,8000.97,Wayne Gretzky,Cash
-13,2023-05-15 12:00:00,John Doe,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Wayne Gretzky,Debit
-14,2023-05-15 12:10:00,Clarke Kent,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Micheal Jordan,MC
-15,2023-05-15 12:20:00,Clarke Kent,B3,2023 Commencal Supreme DH,5299.99,2298.97,Micheal Jordan,AMEX
-16,2023-05-15 12:30:00,John Doe,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Wayne Gretzky,Visa
-17,2023-05-15 12:40:00,Bruce Wayne,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Willie Mays,AMEX
-18,2023-05-15 12:50:00,Bruce Wayne,B1,2023 Kona Process 153,4299.99,2499.97,Tom Brady,AMEX
-19,2023-05-15 13:00:00,John Doe,B1,2023 Kona Process 153,4299.99,2499.97,Wayne Gretzky,Visa
-20,2023-05-15 13:10:00,Peter Parker,B3,2023 Commencal Supreme DH,5299.99,2298.97,Tom Brady,Debit
+1,2023-05-15 10:00:00,Peter Parker,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Willie Mays,Visa
+2,2023-05-15 10:10:00,John Doe,B2,2022 Trek Checkpoint AL5,2899.99,1349.97,Willie Mays,Visa
+3,2023-05-15 10:20:00,Peter Parker,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Tiger Woods,Cash
+4,2023-05-15 10:30:00,Bruce Wayne,B2,2022 Trek Checkpoint AL5,2899.99,1349.97,Willie Mays,Debit
+5,2023-05-15 10:40:00,Clarke Kent,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Micheal Jordan,AMEX
+6,2023-05-15 10:50:00,Reid Moline,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Micheal Jordan,AMEX
+7,2023-05-15 11:00:00,Bruce Wayne,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Tom Brady,Debit
+8,2023-05-15 11:10:00,John Doe,B5,2023 Specialized Turbo Levo SL,11599.99,8000.97,Tom Brady,Cash
+9,2023-05-15 11:20:00,Peter Parker,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Tom Brady,Debit
+10,2023-05-15 11:30:00,John Doe,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Tiger Woods,Cash
+11,2023-05-15 11:40:00,Reid Moline,B2,2022 Trek Checkpoint AL5,2899.99,1349.97,Willie Mays,Debit
+12,2023-05-15 11:50:00,Peter Parker,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Wayne Gretzky,Visa
+13,2023-05-15 12:00:00,Bruce Wayne,B3,2023 Commencal Supreme DH,5299.99,2298.97,Tom Brady,AMEX
+14,2023-05-15 12:10:00,Clarke Kent,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Tiger Woods,Debit
+15,2023-05-15 12:20:00,Reid Moline,B5,2023 Specialized Turbo Levo SL,11599.99,8000.97,Wayne Gretzky,Debit
+16,2023-05-15 12:30:00,John Doe,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Tom Brady,MC
+17,2023-05-15 12:40:00,Peter Parker,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Tom Brady,Debit
+18,2023-05-15 12:50:00,John Doe,B3,2023 Commencal Supreme DH,5299.99,2298.97,Tiger Woods,Visa
+19,2023-05-15 13:00:00,Reid Moline,B6,2023 Rocky Mountain Growler 40,1989.99,1299.97,Tom Brady,MC
+20,2023-05-15 13:10:00,Bruce Wayne,B4,2023 Specialized Enduro Comp,7199.99,2242.97,Wayne Gretzky,Visa
