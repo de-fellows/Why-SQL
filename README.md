@@ -1,22 +1,53 @@
 # Why SQL?
 
-## By: Reid Moline
 
-In my first few years of Python learning, the comma seperated value file reigned supreme as a means of storing and accessing data to be manipulated and visualized. In my second year digital engineering course ENDG 311, I was introduced to Structured Query Language, or SQL, as an alternative means of accessing data from relational databases. More specifically, I was introduced to the python compatible, serverless application SQLite. In this introduction, I learned the basics behind SQLite and used this to create a small scale databases to store and manipulate data.
+### By: Reid Moline
 
-Although I was introduced to a new way of storing and accessing data, the small scale nature of the projects made me wonder what was ever wrong with the simplicity and ease of using CSVs. It was this confusion that lead me to ask, "Why in the world would I use SQL?", and as such warranted further digging. Alligning with Professor David Perkin's seven principles of learning seen in the 2008 book, Making Learning Whole: How Seven Principles of Teaching Can Transform Education, I plan to "make the game worth playing" by diving deeper into the real world applications and usefullness of Structured Query Language along with concepts of data visualization learned in digital engineering courses, looking to answer the over arching question, "Why SQL?"
+# Table of Contents
 
-Before taking this dive further into SQL and SQLite, let us first review go over some basic SQL queries and background. For some, this may be completely new, and for others this may be a brief refresher, all in all this part looks to catch you up to speed with the SQL taught in ENDG 311.
+1. [Overview](#overview)
+2. [Introduction](#introduction)
+3. [SQLite Background and Review](#sqlite-background-and-review)
+4. [Using SQLite](#using-sqlite)
+5. [Motivating Example](#motivating-example)
+6. [Creating a Relational Database Model using SQLite](#creating-a-relational-database-model-using-sqlite)
+7. [Conclusion]()
 
-## Some Background and a Review of SQLite
+## Overview
 
-SQL is a way in which we can access data stored in a relational database. By relational database, I am reffering to a network of numerous structured tables that are related to one another via a common column which serves as what is known as the primary key. For this database structure to work, these primary keys must be unique to each row inputted into the table. For example if we were to have a relational database of all students attending UofC, a UCID would be a great column for a primary key as no two students share the same UCID.
+In this blog post, I intend to show the utility of SQL database applications by displaying a hypothetical example of where an SQL Database is used in a retail setting. Through doing this, I intend to "make the game worth playing", referencing David Perkins' 2008 book Making Learning Whole: How Seven Principles of Teaching Can Transform Education, by showing the capabilities of SQL and how it outpreforms that of the comma seperated value. Although the abilities of SQL go far beyond the capability of this program, I intend to open up the reader to a real world application of SQL, extending the content learned in the course ENDG 311. 
 
-To access and manipulatee data stored in these databases, we use SQL queries, which are statements that utilize keywords to preform certain operations. In a very general way, these operaitons are CRUD operations seen in the table below:
+As a brief note, all code created for this blog post was created and ran on a Windows 64-bit operating system using Python 3.11.4 using Visual Studio as my IDE. 
 
-![CRUD Operations Photo Courtesy of https://static.javatpoint.com/sqlpages/images/crud-operations-in-sql1.jpg](crud-operations-in-sql1.jpg)
+## Introduction
 
-In SQL there are numerous keywords reserved to preform specific operations on data set forth in a relational database. For reference, a list of a few keywords and example uses has been attached below:
+
+In my first few years of Python learning, the comma separated value file reigned supreme as a means of storing and accessing data to be manipulated and visualized. In my second year digital engineering course ENDG 311, I was introduced to Structured Query Language, or SQL, as an alternative means of accessing data from relational databases. More specifically, I was introduced to the python compatible, serverless application SQLite. In this introduction, I learned the basics behind SQLite and used this to create small scale databases to store and manipulate data.
+
+
+Although I was introduced to a new way of storing and accessing data, the small scale nature of the projects made me wonder what was ever wrong with the simplicity and ease of using CSVs. It was this confusion that led me to ask, "Why in the world would I use SQL?", and as such warranted further digging. Aligning with Professor David Perkins’ seven principles of learning seen in the 2008 book, Making Learning Whole: How Seven Principles of Teaching Can Transform Education, I plan to "make the game worth playing" by diving deeper into the real world applications and usefulness of Structured Query Language along with concepts of data visualization learned in digital engineering courses, looking to answer the overarching question, "Why SQL?"
+
+
+Before taking this dive further into SQL and SQLite, let us first review some basic SQL queries and background. For some, this may be completely new, and for others this may be a brief refresher, all in all this part looks to catch you up to speed with the SQL taught in ENDG 311.
+
+
+## SQLite Background and Review
+
+
+SQL is a way in which we can access data stored in relational databases. By relational database, I am referring to a network of numerous structured tables that are related to one another. Unlike piling data into one immensely overcrowded excel spreadsheet or csv, relational databases serve to organize data in tables, and then draw connections between these tables to create a system made up of numerous smaller entities making it easier organize data. With this system of tables, each made up of predefined columns, each row serves as an entry of data. In the relational database structure, you can choose to specify whether or not columns must have unique entries or not. One thing most (not all tables) have in a relational database is called a primary key, which serves as the unique attribute for each row of the table. To better understand this concept it is best to use an example.
+
+
+A great example I've found helpful in explaining this topic is the relational database structure of a library. We can start with a table of books, with a Unique Book ID (Primary Key), Title, Year of Publish, and Author. If we wanted to have more information on the author it wouldn't make sense to have it repeated over and over again as there can be one author with many books. As such we can create another table for Authors, with a unique author ID, their first name, last name, date of birth, hometown, genre, etc. With this table instead we can replace the Author in the books table with the Author ID creating a one to many relationship between the two tables and allowing for all the information to be accessible without wasting millions of lines repeating information. This is essentially what is done with a relational database structure; making data more seamlessly arranged for better storage and access.
+
+
+To access and manipulate data stored in these databases, we use SQL queries, which are statements that utilize keywords to perform certain operations. In a very general way, these operations are CRUD operations seen in the table below:
+
+
+![CRUD Operations Photo Courtesy of https://static.javatpoint.com/sqlpages/images/crud-operations-in-sql1.jpg](crud-operations-in-sql.jpg)
+
+
+In SQL there are numerous keywords reserved to perform specific operations on data set forth in a relational database. For reference, a list of a few keywords and example uses has been attached below:
+
 
     * CREATE - Creates a Table with outlined column titles
         i.e CREATE TABLE table_name(column_1 primary key, column_2 type)
@@ -24,8 +55,8 @@ In SQL there are numerous keywords reserved to preform specific operations on da
         i.e SELECT * FROM table_name
     * WHERE - Used to find data based on conditional statements i.e WHERE value > 6
         i.e SELECT * FROM table_name WHERE id = 2
-    * INSERT - Adding rows to a table 
-        i.e INSERT INTO table-name (the values coresponding to each column)
+    * INSERT INTO - Adding rows to a table
+        i.e INSERT INTO table-name (the values corresponding to each column)
     * UPDATE - Used to update an entry
         i.e UPDATE table-name SET column-name = value1 WHERE column-name = value2
     * DELETE - Used to delete an entry
@@ -33,64 +64,169 @@ In SQL there are numerous keywords reserved to preform specific operations on da
     * DROP  - Used to delete a table
         i.e DROP TABLE table-name
 
-NOTE: These keywords are not case sensitive, rather are capitalized to emphisize that they are keywords
 
-Much like Python has datatypes, SQLite also has certain datatypes that can be seen in the following link: https://www.sqlite.org/datatype3.html
+NOTE: These keywords are not case sensitive, rather are capitalized to emphasize that they are keywords. For the entirety of this blog post, I will be capitalizing any and all keywords used in my queries to emphisize this, as I haven't included all keywords above.
+
+
+Much like Python has data types, SQLite also has certain data types that can be seen in the following link: https://www.sqlite.org/datatype3.html. Most commonly in this post I will be dealing with the data types INTEGER (much like that of integers in Python), REAL (much like that of floats in Python), TEXT (much like that of strings in Python), and lastly NULL values (much like the None keyword in Python). Note there are no Boolean values in SQLite however by using the integers 0 and 1 in tables we can keep track of Boolean values when we use python to interpret the data.
+
 
 ## Using SQLite
 
-For many, SQLite may comes prepackaged with Python, however for some like myself, this is not the case. To test this out feel free to open up a command prompt in your IDE and type into your terminal "sqlite3". The resulting output should look something like the following:
+
+For many, SQLite may come prepackaged with Python, however for some like myself, this is not the case. To test this out feel free to open up a command prompt in your IDE and type into your terminal "sqlite3". The resulting output should look something like the following:
+
 
 ![Sample SQLite3 Terminal](sample-sqlite-terminal-output.png)
 
-If this isn't the case, then head over to www.sqlite.org and head to the downloads tab. From there find the respective precompiled binaries for your respective operating system, download them and place them in the same folder python is installed in. To check where python is in your file explorer type "where python" into your command prompt.
 
-To exit the SQLite terminal type in .exit. SQLite terminals have many other "dot" commands to perform certain funcitons all listed in the documentation below: https://sqlite.org/cli.html. The sqlite3 terminal serves as a useful way to query a database that was altered in a python file to see the outcome, hence I reccomend trying out some queries in the terminal. NOTE: all queries in the terminal must be followed by a semi colon to be executed. 
+If this isn't the case, then head over to www.sqlite.org and head to the downloads tab. From there find the respective precompiled binaries for your respective operating system, and download the associated files. For windows users like myself, the following item should be downloaded:
 
-Now with SQLite installed and ready to go, we can execute SQL queries within a python document by importing sqlite3 and setting up two things; a connection and a cursor. The connection and cursor serve to connect the python document to the database and to be able to execute SQL queries on said database. An example of a simple interaction to open a new sqlite database file named introduction.sqlite and create a table called students is attached in the python document sqlite-intro.py. 
 
-With this simple one table database I encourage you to practice getting comfortable with some of the basic SQL queries listed earlier and even try branching out to use other keywords such as LIKE, AND, OR, NOT, or even try ORDER BY and built in functions like max(), min(), avg(), sum(), and count().
+![Proper Windows SQLite Binaries](sqlite-downloads-windows.png)
 
-With this intro into SQL using only a single table database I couldn't help but think, "Why not just use a CSV? What is the point of SQL?". To answer this question lets move forward into a motivating example relavent to a real world system.
+
+For any operating system ensure the files you download are described as "A bundle of command-line tools for managing SQLite database files...". With these binaries installed, place them into a folder; for reference I created a folder named SQLite, and ensure that you add them to the Path environment variable for your system. To do this on windows, type in the environment into the Start menu and click on the control panel option "Edit the system environment variables". From here follow the steps outlined below:
+
+
+1) Click on Environment Variables:
+
+
+![Environment Variables Button](environment-variables-button.png)
+
+
+2) Under system variables double click the variable named Path
+
+
+![Path Variable](path-variable.png)
+
+
+3) Copy the entire file path to the folder containing your downloaded SQLite files
+
+
+4) Click on New and paste your file path where prompted
+
+
+With these four steps followed you should now be able to use SQLite in the cmd terminal by typing sqlite3. To open the database you want to immediately you can type FILE_NAME.sqlite instead of just of sqlite3. Or you can execute .open FILE_NAME.sqlite after opening the sqlite3 terminal. Either way works, so feel free to choose one.
+
+
+To exit the SQLite terminal type in .exit. SQLite terminals have many other "dot" commands to perform certain functions all listed in the documentation below: https://sqlite.org/cli.html. A quick note is that dot commands can not be used in python script and are restricted to use in the terminal. The sqlite3 terminal serves as a useful way to query a database that was altered in a python file to see the outcome, hence I recommend trying out some queries in the terminal. NOTE: all queries in the terminal must be followed by a semi colon to be executed. This practice of ending queries with a semi colon can be used for queries in python scripts but is not required.
+
+
+Now with SQLite installed and ready to go, we can execute SQL queries within a python document by importing sqlite3 and setting up two things; a connection and a cursor. The connection serves to connect the python document to the database and the cursor allows us to be able to execute SQL queries on said database. An example of a simple interaction to open a new sqlite database file named introduction.sqlite and create a table called students is attached in the python document sqlite-intro.py.
+
+
+With this simple one table database I encourage you to practice getting comfortable with some of the basic SQL queries listed earlier and even try branching out to use other keywords such as the conditionals LIKE, AND, OR, NOT, or even try ordering the output using the query ORDER BY, or use the built in functions like max(), min(), avg(), sum(), and count() to preform computations on numeric data. In this introduction file, I have included queries to show the correct syntax for many of the common queries I'll be using.
+
+
+With this intro into SQL using only a single table database I couldn't help but think, "Why not just use a CSV? What is the point of SQL? Why SQL?". To answer this question let's move forward into a motivating example relevant to a real world system.
+
 
 ## Motivating Example
 
-For this motivating example, I looked to create a scenario around a hobby of mine; bikes, and more specifically around the backend behind the business logic of a bike shop. In this I not only look to look deeper into SQL but also to "make the game worth playing" by looking into an actual real world scenario. Lets say you are the store manager of the Calgary Bike Shop and need a system to process transactions and record transactions with customers and track sales metrics. If we were to generate a mock of what this table would look like using the code in motivating-example-large-table-generator.py, it would look something like the following:
+
+For this motivating example, I looked to create a scenario around a hobby of mine; bikes. More specifically around business logic of a bike shop. In this I not only look to look deeper into SQL but also to "make the game worth playing" by looking into an actual real world scenario. Let's say you are the store manager of the Bike Shop and need a system to process transactions and record transactions with customers and track sales metrics. If we were to generate a mock of what this table would look like using the code in motivating-example-large-table-generator.py, it would look something like the following:
+
 
 ![Motivating Example Single Large Table](motivating-example-large-table.png)
 
-With this very over simplified table of one item transactions, a flaw begins to arrise by changing the constant NUM_SALES to a larger number to mimic a busy sales day. In doing this, a simple 9 column table becomes super long and as such becomes more difficult to sift through for data. Furthermore, this table only considers simple one item transactions of a business; not taking into account transactions with more than one item. On top of that, there is way more information we can include about products, employees, and customers that if added would make this table huge! If we were to continue to add all of this to one table and format it as a CSV, it would be a horrendously large and jumbled up array of data. This is where a relational database structure can help.
 
-# Creating a relational database model using SQLite
+With this very over simplified table of one item transactions, a flaw begins to arise by changing the constant NUM_SALES to a larger number to mimic a busy sales day. In doing this, a simple 9 column table becomes super long and as such becomes more difficult to sift through for data. Furthermore, this table only considers simple one item transactions of a business; not taking into account transactions with more than one item. On top of that, there is way more information we can include about products, employees, and customers that if added would make this table huge! If we were to continue to add all of this to one table and format it as a CSV, it would be a horrendously large and jumbled up array of data. This is where a relational database structure can help.
 
-Focussing only on the retail transactions and stock side of the business, we can begin to seperate the portions of a transaction into four seperate categories; the customer, the salesperson, the transacitons, and the products. Although all four of these things are seperate entities, they all relate to each other in one way or another. In formatting four seperate tables for these items it can allow for us to organize a better system for storing transaction records.
 
-First off we can start with creating a table for the people who make having a business possible; the customers. Given people can have the same full first and last name it would make sense to create a numeric customer ID to create different profiles. With this we can include basic information that can help keep record of business, such as their first name, last name, email, and phone number. Using the code in customers.py we can create a mock up table of customer profiles. Accessing this table via the SQLite3 terminal we can see the following output:
+# Creating a Relational Database Model using SQLite
+
+
+NOTE: In the creation of this database I used foreign key constraints between tables, something that needs to be enabled in sqlite. When I open bikeshop.sqlite in the terminal this is done by executiing the query, "PRAGMA foreign_keys = ON;". In a python script this is the first line executed by the cursor to ensure that foreign key constraints, which I will cover later, are enabled.
+
+
+Focussing only on the retail side of the business, we can begin to separate the portions of a transaction into four separate categories; the customers, the salespeople, the transactions, and the products. Although all four of these things are separate entities, they all relate to each other in one way or another. In formatting four separate tables for these items it can allow for us to organize a better system for storing retail records. On top of the four main tables, to stick to example sparked by my interest I'm also including a table that will deal with the serialization of bikes, for like cars bikes are each equipped with a serial number from the manufacture as a means of tracking ownership. 
+
+
+First off we can start with creating a table for the people who make having a business possible; the customers. Given people can have the same full first and last name it would make sense to create a numeric customer ID to create different profiles. With this we can include basic information that can help keep record of business, such as their first name, last name, email, and phone number. With this we can say the customer must provide a unique phone number to have an account but it is optional to opt-out of giving their email. Using the code in customers.py we can create a mock up table of customer profiles. Accessing this table via the SQLite3 terminal we can see the following output:
+
 
 ![Generated Customer Table](customers-table.png)
 
+
 In the code customers.py, notice that I included the query:
+
 
     cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
 
-In this table, notice how I made the first entry, Customer ID 0, be all NULL values (like Python None values). I reserved this to be a guest customer profile, for in real world application not every customer would want to be entered in the system and as such this would allow transactions to occur with no customer profile. Furthermore some may opt-in to everything but giving their email like Customer ID 49. You can check this using the sqlite3 terminal by typing the following in the command prompt:
+
+In this table, notice how I made the first entry, Customer ID 0, be all NULL values (like Python None values). I reserved this to be a guest customer profile, for in real world application not every customer would want to be entered in the system and as such this would allow transactions to occur with no customer profile. If the customere opts-out of email capture, you can see this using the query:
+
 
     sqlite3 bikeshop.sqlite
     SELECT * FROM Customers WHERE customer_email IS NULL;
 
+
 Or you can access a list of all row tuples where this is the case using these lines of code into customers.py:
+
 
     cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
 
     all_rows_with_no_email = cursor.fetchall()
 
 
-Moving on from this to the creation of an Employee table seen in the file employees.py. For a basic record of all employees I have included an employee id, first name, last name, work email, and phone number. An employer can store other employee data in this table as well such as payment information, hourly wage, etc., but for simplicity lets keep it small. The table generated using the code in employees.py shown via a query in the SQLite3 terminal is of the following form:
+This can be used to track email capture for a business and as such is a useful piece of data.
+
+
+Moving on from this to the creation of an Employee table seen in the file employees.py. For a basic record of all employees I have included an employee id, first name, last name, work email, and phone number. An employer can store other employee data in this table as well such as payment information, hourly wage, etc., but for simplicity let's keep it small. The table generated using the code in employees.py shown via a query in the SQLite3 terminal is of the following form:
+
 
 ![Generated Employees Table](employees-table.png)
 
-Now we can generate a table for the products in store. Keeping it somewhat small compared to the amount of products a bike shop would carry, I've used my knowledge of bike brands, component specification levels and sizes to create a table full of different bikes as well as accessories some would also see in a bike shop. In the file products.py, I've used this knowledge along with researched msrp values from major bike brands websites and the assumed 55% cost of these items, to generate the table seen below. For the products, I made it so that each product will have it's own 12 digit universal product code (UPC), a description of the product, the quantity of the product on hand, the vendor which the product is ordered from, the manufactuer's suggested retail price (MSRP), the business cost of the unit. With this all considered, using the code in the file products.py, the generated table is of the following form:
+
+Now we can generate a table for the products in store. Keeping it somewhat small compared to the amount of products a bike shop would carry, I've used my knowledge of bike brands, component specification levels, and sizes to create a table full of different bikes as well as accessories some would also see in a bike shop. In the file products.py, I've used this knowledge along with researched MSRP values from major bike brands websites and the assumed cost margin of 45%, to generate the table seen below. For the products, I made it so that each product will have it's own 12 digit universal product code (UPC), a description of the product, the quantity of the product on hand, the manufacturer's suggested retail price (MSRP), the wholesale retailer's cost of the unit, as well as whether or not the item is individually serialized. With this all considered, using the code in the file products.py, the generated table is of the following form:
+
 
 ![Generated Products Table](products-table.png)
 
-NEXT: Handling transactions and bike serilization
+
+With a table of all products carried, staying true to the bike shop example, we must add in a table to record bike serialization. For the record of the business we can store these serial numbers within another table, along with the description of the bike, the UPC, and whether or not the bike is sold. 
+
+With the creation of this table, I included the UPC of the bike, however if incorrect data was input here that didn't match a UPC in the products table the whole database would be flawed. As a way to stop this I introduced a Foreign key constraint to the serialization table. By doing so I am ensuring the data put into the UPC column of the Serialization table contains a UPC that is actually in the Products database. This makes the database more robust against someone trying to enter in wrong information.
+
+For the simplicity of creating this table, I have gone ahead and assumed all bike brands share a universal format for serialization, where the serial number is a 12 digit alphanumeric code starting with the letters WTU, a common start to serial numbers manufactured by Trek Bicycle Corporation. Using the code seen in the file serialization.py we can generate a table like the following:
+
+FIXME INSERT SERIALIZATION TABLE SCREENSHOT
+
+With all of these tables created and some small connections created, it is now time to generate a table which links all these tables together, a table of transactions. With every transaction a business has it is good to track who makes the sale, who purchases the item, as well as recording what tender was used. To create this table as seen in the file transactions.py, I have created the table using the following query:
+
+cursor.execute("""CREATE TABLE IF NOT EXISTS Transactions
+               (Transaction_Number INT NOT NULL,
+               customer_id INTEGER NOT NULL,
+               Item TEXT NOT NULL,
+               UPC INTEGER NOT NULL,
+               Item_Cost REAL,
+               Serial_Number TEXT DEFAULT NULL,
+               Salesperson_ID INT,
+               Payment_Type TEXT DEFAULT NULL,
+               Date TEXT,
+               FOREIGN KEY (customer_id) REFERENCES Customers (customer_id),
+               FOREIGN KEY (UPC) REFERENCES Products (UPC)
+               )""")
+
+First and foremost notice this table doesn't have a Primary Key. This is intended as It serves to use compile foreign keys from other tables. In the creation of this table, I have outlined numerous foreign keys. Through this we get the link between all of our seperate tables, as these constraints are what ensure the values under each of these columns must allign with those already in the database. With this system I am assuming the salesperson has the ability to scan barcodes for both the UPC of the item as well as the serial number of a bike if one is being purchased. These would tags the item would have in a real world retail setting. Furthermore since we have an option to add the payment type for each item, I am assuming a third party device is being used to take payment and this is relayed manually by the user, a common practice I've seen in past jobs working retail.  
+
+With this table created. I Have created a mock terminal based program that is meant to go through the process of a sale. First prompting for the salesperson's ID, then finding the customer's profile so it can track receipts, then going forward with "scanning" in product. In a retail setting there would be a graphical user interface to preform this option, however for simplicities sake I have chosen to make this a terminal based application. It is entirely possible, using the SQLite backend to create a GUI using tkinter as taught in ENDG 311 further showing how we can comine concepts from the digital engineering course to create real world useful applications; making the game worth playing as David Perkins would put it. 
+
+Lastly, in the creation of this terminal based sale generator, I had realized that I needed a way to stop the sale from scanning through an item showing 0 in stock. This would create negative inventory and not be optimal in a real retail setting. To account for inventory issues found when scanning items and creating sales, i.e the computer showing no item in stock when the item is scanned, I have created a table called Reconcile which is generated in the file reconcoile.py. The purpose of this table is to record an inventory issue arises when scanning, noting what transaction this occured in, what the item upc is, the date of the transaction, as well as the status of whether or not the issue has been resolved. This table can be used internally by staff to see where issues in inventory are and allow them to fix them. This table is intended to track inventory issues of small priced item and allow them to still be sold to the cusotmer. If a bike has an inventory issue then this warrants investigation and must be dealt with by someone immediately. This somewhat would mimic that of a real retail setting.
+
+## Creating Transactions
+
+With the creation of these six interconnected tables we can start to create transaction and utilize the database. To emulate a real world setting, I have imagined that each time a person comes to the till with items a sales is started by running the file transactions.py, and thus using the terminal based process the employee can complete the sale.
+
+Through querying the database created, we can ensure only proper employee credentials, customers, and items are used in the creation of a sale, allowing us to have proper records which are useful to the business. I encourage you to practice querying different tables of the database and find some employee IDs, customer IDs, product UPC, and serial numbers for bicycles, and try and go through the process of creating a sale. Then I encourage you to go back into the database and query the Transactions table to see the records pop up, and also check the updated quantities. For some help getting started I will show you the process.
+
+
+
+
+
+
+
+## Conclusion
+
+## References
