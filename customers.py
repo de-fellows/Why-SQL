@@ -77,6 +77,40 @@ if __name__ == "__main__":
 
     conn = sqlite3.connect('bikeshop.sqlite')
     cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
 
-    # Execute some queries in regards to merging duplicate accounts and updating the database and ordering by last name and first name etc.
-    pass
+    cur.execute("SELECT employee_code FROM Employees;")
+
+    all_emp_ids = cur.fetchall()    # list of one element tuples
+
+    randomly_selected_emp_id = all_emp_ids[rd.randrange(0,len(all_emp_ids))][0] # Grabs one employee id from the employee table randomly
+    
+    print(f"Employee ID: {randomly_selected_emp_id}")
+    print('_' * 20 + '\n')
+
+    cur.execute("SELECT COUNT(*) FROM Customers WHERE created_by = ?", (randomly_selected_emp_id,))
+
+    total_profiles_created_by_employee = cur.fetchone()[0]
+
+    print(f"Total Profiles Created: {total_profiles_created_by_employee}")
+
+    cur.execute("SELECT COUNT(*) FROM Customers WHERE customer_email IS NULL AND created_by = ?;", (randomly_selected_emp_id,)) # NOTE the IS NULL query to check where no email
+
+    profiles_created_by_employee_with_no_email = cur.fetchone()[0]
+
+    print(f"Number of profiles created with no email: {profiles_created_by_employee_with_no_email}")
+
+    if total_profiles_created_by_employee == 0:             # In case an employee hasn't created any profiles
+        print("No Email Capture Percentage can be given")
+
+    else:
+        email_capture_percentage = ((total_profiles_created_by_employee - profiles_created_by_employee_with_no_email) / total_profiles_created_by_employee) * 100
+
+        print(f"Employee Email Capture: {email_capture_percentage:.2f}%")   # Important for the business to track where how often employees get the customers email
+
+    # For you TODO Try adding more customers to the database noting you'd need to first find some employee ids to insert given the foreign key constraint.
+
+    # For you TODO Try adding customers without an email and check how the email capture percentage changes with this
+
+    conn.commit()
+    conn.close()

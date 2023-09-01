@@ -68,3 +68,8 @@ if __name__ == "__main__":
     conn = sqlite3.connect('bikeshop.sqlite')
     cur = conn.cursor()
     cur.execute("PRAGMA foreign_keys = ON")
+
+    # For you TODO After selling some bikes using the transactions.py terminal based sale application try and search the serial numbers of all sold bikes. Or try finding all sold bikes of a certian brand (i.e Trek)
+
+    conn.commit()
+    conn.close()

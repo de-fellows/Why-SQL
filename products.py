@@ -122,6 +122,25 @@ def create_filled_products_table():
     connection.commit() # Commits all alterations to the database
     connection.close()  # ends conection
 
-if __name__ == "main":
-    pass
-    # show how you can look up products see whats not in stock order by different catagories (price) (cost) (quantity) etc.
+if __name__ == "__main__":
+
+    conn = sqlite3.connect('bikeshop.sqlite')
+    cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
+
+    cur.execute("SELECT UPC, Description, Cost FROM Products WHERE Quantity = 0") # Finding out of stock items to reorder
+
+    items_not_in_stock = cur.fetchall()
+
+    print("Items not in Stock")
+
+    print("UPC                 Description                                       Cost")
+
+    for i in range(len(items_not_in_stock)):
+        print(f"{str(items_not_in_stock[i][0]):20s}{items_not_in_stock[i][1]:50s}{items_not_in_stock[i][2]:.2f}")
+
+    # For you TODO Try querying to check the stock of a certain bike by the Description. 
+    # For you TODO Try finding the quantity of all sizes of a specific bike making use of the LIKE keyword
+
+    conn.commit()
+    conn.close()

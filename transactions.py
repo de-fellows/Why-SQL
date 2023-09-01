@@ -292,6 +292,7 @@ if __name__ == "__main__":
                     elif sold_status[0][0] == 0:
 
                         cursor.execute("INSERT INTO Transactions VALUES(?,?,?,?,?,?,?,?,?)", (transaction_number, customer_id, description, upc, price, serial_number, employee_making_sale, None, date_of_sale ))      # Payment detail will be updated when scanning complete and total is "paid"
+                        cursor.execute("UPDATE Serialization SET Sold = 1 WHERE Serial_Number = ?;", (serial_number,))
                         print("Bike Added")
                         print(line)
                         

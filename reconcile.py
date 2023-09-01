@@ -29,5 +29,26 @@ def create_empty_reconcile_table():
 
 
 if __name__ == "__main__":
-    # Show how a manager can check for issues to be reconciled and how if there is one how they can go into products and change the quantity to reflect 0
-    pass
+
+    conn = sqlite3.connect('bikeshop.sqlite')
+    cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
+
+
+    cur.execute("SELECT UPC FROM Reconcile WHERE Fixed = 0;")
+
+    unfixed_inventory_issues = cur.fetchall()
+
+    if len(unfixed_inventory_issues) != 0:
+
+        print("UPC's with negative quantity showing")
+        print('_' * 20 + '\n')
+        
+        for i in range(len(unfixed_inventory_issues)):
+
+            print(unfixed_inventory_issues[i][0])   # Prints out each upc from
+
+    # For you TODO Given this list of issues try and create queries to fix the quantity to be 0 and don't forget to close the issue
+
+    conn.commit()
+    conn.close()

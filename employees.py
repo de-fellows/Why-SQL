@@ -58,7 +58,31 @@ def create_filled_employees_table():
     connection.commit() # commits changes to database
     connection.close()  # closes connection
 
-if __name__ == "main":
+if __name__ == "__main__":
 
-    pass
-#execute some queries to show the usefulness of sql for business logic
+    conn = sqlite3.connect("bikeshop.sqlite")
+    cur = conn.cursor()
+    cur.execute("PRAGMA foreign_keys = ON")
+
+    cur.execute("SELECT email FROM Employees WHERE department = 'Sales';")  # Would be a useful query if we wanted to find all the salespeoples emails to send a group message
+
+    emails = cur.fetchall()
+
+    list_sales_emails = [emails[i][0] for i in range(len(emails))]  # Makes a python list of these emails. Can implement a program to send emails to this entire list. It is entirely possible in python!
+
+    cur.execute("SELECT employee_code, last_name, first_name FROM Employees ORDER BY last_name ASC, first_name ASC;") # Grabs the ID and full name of the employees. Sorts alphabetically by last name then by first name
+
+    employee_names_sorted = cur.fetchall()
+
+    print("Employee ID      Last Name       First Name")    # Making a simple list a manager can use to internally for things like payroll etc
+    print("_" * 50 + '\n')
+
+    for i in range(len(employee_names_sorted)):
+        print(f'{str(employee_names_sorted[i][0]):17s}{employee_names_sorted[i][1]:16s}{employee_names_sorted[i][2]:16s}')
+
+
+    # For you TODO Feel free to try out some other queries with this database!
+    # For you TODO Try adding a new employee, editing ones email, or promoting an employee and changing their role to assistant manager!
+
+    conn.commit()
+    conn.close()
