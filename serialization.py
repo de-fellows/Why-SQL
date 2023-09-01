@@ -20,8 +20,6 @@ def create_filled_serialization_table():
     cursor = connection.cursor()
     cursor.execute('PRAGMA foreign_keys = ON;')
 
-    cursor.execute('DROP TABLE IF EXISTS Serialization')
-
     # Used Doc String for below query to create table to help make it easy to read can use single or double quotes and type on one line this just is neater
     cursor.execute('''CREATE TABLE IF NOT EXISTS Serialization
                 (Serial_Number TEXT, 

@@ -15,19 +15,15 @@ def create_empty_reconcile_table():
 
     connection = sqlite3.connect('bikeshop.sqlite')     # Creates a connection to the database
     cursor = connection.cursor()
-    cursor.execute("PRAGMA foreign_keys = ON")  
-
-    cursor.execute("DROP TABLE IF EXISTS Reconcile;")       
+    cursor.execute("PRAGMA foreign_keys = ON")        
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS Reconcile 
-                (Issue_ID INT, 
-                Transaction_Number INT,
+                (Issue_ID INT,
                 UPC INT, 
                 Date TEXT,
                 Fixed INT DEFAULT '0',
                 PRIMARY KEY (Issue_ID),
-                FOREIGN KEY (UPC) REFERENCES Products (UPC),
-                FOREIGN KEY (Transaction_Number) REFERENCES Transactions (Transaction_Number)
+                FOREIGN KEY (UPC) REFERENCES Products (UPC)
                 )""")
     
 

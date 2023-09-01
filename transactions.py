@@ -19,9 +19,6 @@ def create_empty_transactions_table():
     cur = conn.cursor()
     cur.execute('PRAGMA foreign_keys = ON;')
         
-    cur.execute(""" DROP TABLE IF EXISTS Transactions;""") 
-
-
     cur.execute("""CREATE TABLE IF NOT EXISTS Transactions
                 (Transaction_Number INT NOT NULL,
                 customer_id INTEGER NOT NULL,
@@ -51,9 +48,6 @@ if __name__ == "__main__":
     #Below line if removed from docstrings will delete all transaction history
 
     '''
-    cursor.execute(""" DROP TABLE IF EXISTS Transactions;""") 
-
-
     cursor.execute("""CREATE TABLE IF NOT EXISTS Transactions
                 (Transaction_Number INT NOT NULL,
                 customer_id INTEGER NOT NULL,
@@ -73,7 +67,7 @@ if __name__ == "__main__":
         
         print(line)
 
-        employee_making_sale = int(input('Please Enter your Employee ID: '))
+        employee_making_sale = input('Please Enter your Employee ID: ')
         attempt = 1
 
         cursor.execute("SELECT * FROM employees WHERE employee_code = ?", (employee_making_sale,))
@@ -99,7 +93,7 @@ if __name__ == "__main__":
         print(line)
 
         print("Please select what to search for the customer using the numbered options below or enter 0 to continue with a Guest Customer or 4 to quit\n")
-        print("1) Phone Number")    # UNIQUE
+        print("1) Phone Number")
         print("2) Customer ID")     # Primary Key so UNIQUE
         print("3) Create New Customer")
 
@@ -142,7 +136,7 @@ if __name__ == "__main__":
                 print("Phone number already in use. Enter New Number")
                 new_phone = input("Phone Number (required): ")
 
-            cursor.execute("INSERT INTO Customers VALUES(?,?,?,?,?);", (customer_id, new_first_name, new_last_name, new_email, new_phone))
+            cursor.execute("INSERT INTO Customers VALUES(?,?,?,?,?,?);", (customer_id, new_first_name, new_last_name, new_email, new_phone, employee_making_sale))
 
 
         elif option == 0:
@@ -156,10 +150,15 @@ if __name__ == "__main__":
 
             phone_search_results = cursor.fetchall()
 
-            while len(phone_search_results) == 0 and cust_phone != '':
+            while len(phone_search_results) != 1 and cust_phone != '':
                 print(line)
                 if len(phone_search_results) == 0:
                     print("No Results try again or press ENTER to quit")
+
+                elif len(phone_search_results) > 1:                                 # Allows for revert to search by customer ID if family using same phone number for account
+                    print("Too many results Please try searching by Customer ID")
+                    option = 2
+                    break
 
                 cust_phone = input("Please enter the phone number: ")
 
@@ -167,14 +166,13 @@ if __name__ == "__main__":
 
                 phone_search_results = cursor.fetchall()
 
-
             if cust_phone == '':    # Gives option to quit
                 break
 
             customer_id = phone_search_results[0][0]    # Once refined to one account we can grab the customer ID
 
 
-        elif option == 2:
+        if option == 2:
 
             customer_id = input("Please enter the Customer ID: ")
             
@@ -259,6 +257,7 @@ if __name__ == "__main__":
                 if new_quantity < 0 and serialized:     # if a bike is scanned through and not in inventory this warrants a manager because the bike can't be sold if not in inventory. Too high ticket an item to sell without being in the systems inventory
                     print("Bike not in Inventory. Manager Assistance Needed")
                     print("Bike has not been added to transaction until manager reconciles issue")
+                    print(line)
                     continue
 
                 elif new_quantity < 0 and not serialized:    # Issue with inventory that needs to be reconciled. item can still be sold if not serialized. Sometimes things get misplaced and/or stolen and inventory is wrong
@@ -267,14 +266,15 @@ if __name__ == "__main__":
                     issue_ids = cursor.fetchall()
                     list_issue_ids = [issue_ids[i][0] for i in range(len(issue_ids))]
 
-                    new_issue_id = rd.rantint(1000000, 9999999) # Creates an ID to reference the issue by
+                    new_issue_id = rd.randint(1000000, 9999999) # Creates an ID to reference the issue by
 
                     while new_issue_id in list_issue_ids:
-                        new_issue_id = rd.rantint(1000000, 9999999) # Ensures uniqueness of issue ID
+                        new_issue_id = rd.randint(1000000, 9999999) # Ensures uniqueness of issue ID
                     
 
-                    cursor.execute("INSERT INTO Reconcile VALUES(?,?,?,?,?)", (new_issue_id, transaction_number, upc, date_of_sale, 0))     # Creates new inventory issue to be reconciled
-
+                    cursor.execute("INSERT INTO Reconcile VALUES(?,?,?,?)", (new_issue_id, upc, date_of_sale, 0))     # Creates new inventory issue to be reconciled
+                    print('Item sold but Invnetory Issue needs to be Reconciled')
+                    
                 if serialized:
 
                     serial_number = input("Please Enter the Serial Number of the bike exactly as seen: ")
@@ -292,13 +292,19 @@ if __name__ == "__main__":
                     elif sold_status[0][0] == 0:
 
                         cursor.execute("INSERT INTO Transactions VALUES(?,?,?,?,?,?,?,?,?)", (transaction_number, customer_id, description, upc, price, serial_number, employee_making_sale, None, date_of_sale ))      # Payment detail will be updated when scanning complete and total is "paid"
-
+                        print("Bike Added")
+                        print(line)
+                        
                 elif not serialized:
 
                     serial_number = None
 
                     cursor.execute("INSERT INTO Transactions VALUES(?,?,?,?,?,?,?,?,?)", (transaction_number, customer_id, description, upc, price, serial_number, employee_making_sale, None, date_of_sale ))      # Payment detail will be updated when scanning complete and total is "paid"
                     
+                    print("Item Added")
+                    print(line)
+            
+
         cursor.execute("SELECT SUM(Item_Cost) FROM Transactions WHERE Transaction_Number = ?;", (transaction_number,))
 
         subtotal = cursor.fetchone()[0] #Accessing first index of single tuple (fetchone)
@@ -313,7 +319,7 @@ if __name__ == "__main__":
             print(line)
 
             print(f"Subtotal:   {subtotal}")
-            print(f"Total:      {total}")
+            print(f"Total:      {total:.2f}")
 
             print(line)
 

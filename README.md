@@ -137,49 +137,33 @@ With this very over simplified table of one item transactions, a flaw begins to 
 # Creating a Relational Database Model using SQLite
 
 
-NOTE: In the creation of this database I used foreign key constraints between tables, something that needs to be enabled in sqlite. When I open bikeshop.sqlite in the terminal this is done by executiing the query, "PRAGMA foreign_keys = ON;". In a python script this is the first line executed by the cursor to ensure that foreign key constraints, which I will cover later, are enabled.
+NOTE: In the creation of this database I used foreign key constraints between tables, something that needs to be enabled in sqlite. When I open bikeshop.sqlite in the terminal this is done by executiing the query, "PRAGMA foreign_keys = ON;". In a python script this is the first line executed by the cursor to ensure that foreign key constraints, which I will cover later, are enabled. Furthermore, to revert to the initially created database I had generated, the file database_reset.py has to be run. As I go through the creation of each table I pretend as if the function to generate the other tables is not in the database_reset.py file, as they weren't when I created the database table by table. By resetting the database, this clears all transactions recorded, and all issues to be reconciled.
 
 
 Focussing only on the retail side of the business, we can begin to separate the portions of a transaction into four separate categories; the customers, the salespeople, the transactions, and the products. Although all four of these things are separate entities, they all relate to each other in one way or another. In formatting four separate tables for these items it can allow for us to organize a better system for storing retail records. On top of the four main tables, to stick to example sparked by my interest I'm also including a table that will deal with the serialization of bikes, for like cars bikes are each equipped with a serial number from the manufacture as a means of tracking ownership. 
 
+First off, we can start with creating a table for the people who run the show; the employees. For a basic record of all employees on staff we can generate a table including a unique employee ID, their first name, last name, work email, and phone number for contact purposes, as well as what department they belong to. An employer can use this table to find an employees contact info for shift trading, grab all emails to send an email to the entire staff, etc.. These queries and others have been included in the file employees.py. Running this file directly executes each query and shows what can be done with just this table to help the business. Furthermore, in this file I have defined the funciton create_filled_employees_table which can be called to create and fill a table of employees. Feel free to look through the code and see how this was done. Through calling this function in the file database_reset.py, and then running a query through the terminal, we get a table of the following form:
 
-First off we can start with creating a table for the people who make having a business possible; the customers. Given people can have the same full first and last name it would make sense to create a numeric customer ID to create different profiles. With this we can include basic information that can help keep record of business, such as their first name, last name, email, and phone number. With this we can say the customer must provide a unique phone number to have an account but it is optional to opt-out of giving their email. Using the code in customers.py we can create a mock up table of customer profiles. Accessing this table via the SQLite3 terminal we can see the following output:
+![Generated Employees Table](employees-table.png)
+
+A quick note that I had created an employee account for a Manager with the employee id 1234. This will serve useful later when I create transactions as I have a known login to use, and also allows us to have a guest customer profile. It may not make sense now, but keep reading and it'll all come together.
+
+With our employee table generated, we can start with creating a table for the people who make having a business possible; the customers. With this we can include basic information that can help keep record of business, such as their first name, last name, email, and phone number. Given people can have the same first name and last name, as well as families can share the same email or land line phone number (yes some of us still have these), it would make sense to create a numeric customer ID to create different profiles. To track how well the employees that would be creating the customer IDs are, we can add the employee ID of who created the customer profile. In doing so we can track stats on how well employees capture a customers email, which is important if the store had a newsletter for promotions.
+
+In creating this connection between customer and employee, we can create a foreign key constraint. This allows for the customers table column created_by to only contain employee codes that are actually in the employees table. This ensures proper information is relayed and someone can't just go into the database and insert a random number into the created_by column. 
+
+If a customer does not want to have a profile added, they can opt out. This is one of the reasons why I created a Manager employee profile as I have made the code in the function create_filled_customers_table defined in customers.py so that a guest account with customer ID 0 can be made. This is so we can also track guest purchases.
+
+ Utilizing the function create_filled_customers_table defined in the file customers.py we can generate a filled table of randomly generated customers for our hypothetical business. By running the function create_filled_customers_table as seen in the file database_reset.py we can create a mock up table of customer profiles. Querying this table via the SQLite3 terminal we can see the following output:          
 
 
 ![Generated Customer Table](customers-table.png)
 
 
-In the code customers.py, notice that I included the query:
+In the main code of customers.py (that runs only when we run the file customers.py directly), I included some queries to demonstrate ways we can access information that is crucial to a business. Feel free to run that script and see just what useful information I can extract.
 
 
-    cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
-
-
-In this table, notice how I made the first entry, Customer ID 0, be all NULL values (like Python None values). I reserved this to be a guest customer profile, for in real world application not every customer would want to be entered in the system and as such this would allow transactions to occur with no customer profile. If the customere opts-out of email capture, you can see this using the query:
-
-
-    sqlite3 bikeshop.sqlite
-    SELECT * FROM Customers WHERE customer_email IS NULL;
-
-
-Or you can access a list of all row tuples where this is the case using these lines of code into customers.py:
-
-
-    cursor.execute("SELECT * FROM Customers WHERE customer_email IS NULL")
-
-    all_rows_with_no_email = cursor.fetchall()
-
-
-This can be used to track email capture for a business and as such is a useful piece of data.
-
-
-Moving on from this to the creation of an Employee table seen in the file employees.py. For a basic record of all employees I have included an employee id, first name, last name, work email, and phone number. An employer can store other employee data in this table as well such as payment information, hourly wage, etc., but for simplicity let's keep it small. The table generated using the code in employees.py shown via a query in the SQLite3 terminal is of the following form:
-
-
-![Generated Employees Table](employees-table.png)
-
-
-Now we can generate a table for the products in store. Keeping it somewhat small compared to the amount of products a bike shop would carry, I've used my knowledge of bike brands, component specification levels, and sizes to create a table full of different bikes as well as accessories some would also see in a bike shop. In the file products.py, I've used this knowledge along with researched MSRP values from major bike brands websites and the assumed cost margin of 45%, to generate the table seen below. For the products, I made it so that each product will have it's own 12 digit universal product code (UPC), a description of the product, the quantity of the product on hand, the manufacturer's suggested retail price (MSRP), the wholesale retailer's cost of the unit, as well as whether or not the item is individually serialized. With this all considered, using the code in the file products.py, the generated table is of the following form:
+Moving on, we can generate a table for the products in store. Keeping it somewhat small compared to the amount of products a bike shop would carry, I've used my knowledge of bike brands, component specification levels, and sizes to create a table full of different bikes as well as accessories some would also see in a bike shop. In the file products.py, I've used this knowledge along with researched MSRP values from major bike brands websites and the assumed high sale margin of 45%, to generate the table seen below. For the products, I made it so that each product will have it's own 12 digit universal product code (UPC), a description of the product, the quantity of the product on hand, the manufacturer's suggested retail price (MSRP), the wholesale retailer's cost of the unit, as well as whether or not the item is individually serialized. With this all considered, using the function create_filled_products_table defined in the file products.py, the generated table is of the following form:
 
 
 ![Generated Products Table](products-table.png)
@@ -187,11 +171,11 @@ Now we can generate a table for the products in store. Keeping it somewhat small
 
 With a table of all products carried, staying true to the bike shop example, we must add in a table to record bike serialization. For the record of the business we can store these serial numbers within another table, along with the description of the bike, the UPC, and whether or not the bike is sold. 
 
-With the creation of this table, I included the UPC of the bike, however if incorrect data was input here that didn't match a UPC in the products table the whole database would be flawed. As a way to stop this I introduced a Foreign key constraint to the serialization table. By doing so I am ensuring the data put into the UPC column of the Serialization table contains a UPC that is actually in the Products database. This makes the database more robust against someone trying to enter in wrong information.
+With the creation of this table, I included the UPC of the bike, however if incorrect data was input here that didn't match a UPC in the products table the whole database would be flawed. As a way to stop this I introduced a foreign key constraint to the serialization table. By doing so I am ensuring the data put into the UPC column of the Serialization table contains a UPC that is actually in the Products database. This makes the database more robust against someone trying to enter in wrong information.
 
 For the simplicity of creating this table, I have gone ahead and assumed all bike brands share a universal format for serialization, where the serial number is a 12 digit alphanumeric code starting with the letters WTU, a common start to serial numbers manufactured by Trek Bicycle Corporation. Using the code seen in the file serialization.py we can generate a table like the following:
 
-FIXME INSERT SERIALIZATION TABLE SCREENSHOT
+![Generated Serialization Table](serialization-table.png)
 
 With all of these tables created and some small connections created, it is now time to generate a table which links all these tables together, a table of transactions. With every transaction a business has it is good to track who makes the sale, who purchases the item, as well as recording what tender was used. To create this table as seen in the file transactions.py, I have created the table using the following query:
 
@@ -209,17 +193,25 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS Transactions
                FOREIGN KEY (UPC) REFERENCES Products (UPC)
                )""")
 
-First and foremost notice this table doesn't have a Primary Key. This is intended as It serves to use compile foreign keys from other tables. In the creation of this table, I have outlined numerous foreign keys. Through this we get the link between all of our seperate tables, as these constraints are what ensure the values under each of these columns must allign with those already in the database. With this system I am assuming the salesperson has the ability to scan barcodes for both the UPC of the item as well as the serial number of a bike if one is being purchased. These would tags the item would have in a real world retail setting. Furthermore since we have an option to add the payment type for each item, I am assuming a third party device is being used to take payment and this is relayed manually by the user, a common practice I've seen in past jobs working retail.  
+First and foremost notice this table doesn't have a Primary Key. This is intended as It serves to use compile foreign keys from other tables. In the creation of this table, I have outlined numerous foreign keys. Through this we get the link between all of our seperate tables, as these constraints are what ensure the values under each of these columns must allign with those already in the database.
 
-With this table created. I Have created a mock terminal based program that is meant to go through the process of a sale. First prompting for the salesperson's ID, then finding the customer's profile so it can track receipts, then going forward with "scanning" in product. In a retail setting there would be a graphical user interface to preform this option, however for simplicities sake I have chosen to make this a terminal based application. It is entirely possible, using the SQLite backend to create a GUI using tkinter as taught in ENDG 311 further showing how we can comine concepts from the digital engineering course to create real world useful applications; making the game worth playing as David Perkins would put it. 
+With this retail transaction system, I am assuming the salesperson has the ability to scan barcodes for both the UPC of the item as well as the serial number of a bike if one is being purchased. These would tags the item would have in a real world retail setting. Furthermore, since we have an option to add the payment type for each item, I am assuming a third party device is being used to take payment and this is relayed manually by the user, a common practice I've seen in past jobs working retail.  
 
-Lastly, in the creation of this terminal based sale generator, I had realized that I needed a way to stop the sale from scanning through an item showing 0 in stock. This would create negative inventory and not be optimal in a real retail setting. To account for inventory issues found when scanning items and creating sales, i.e the computer showing no item in stock when the item is scanned, I have created a table called Reconcile which is generated in the file reconcoile.py. The purpose of this table is to record an inventory issue arises when scanning, noting what transaction this occured in, what the item upc is, the date of the transaction, as well as the status of whether or not the issue has been resolved. This table can be used internally by staff to see where issues in inventory are and allow them to fix them. This table is intended to track inventory issues of small priced item and allow them to still be sold to the cusotmer. If a bike has an inventory issue then this warrants investigation and must be dealt with by someone immediately. This somewhat would mimic that of a real retail setting.
+With this table created using the function create_empty_transactions_table defined in transactions.py, We can move on to create actual transactions. 
+
+I have created a mock terminal based program that is meant to go through the process of a sale. First prompting for the salesperson's ID, then finding the customer's profile so it can track receipts, then going forward with "scanning" in product. In a retail setting there would be a graphical user interface to preform this option, however for sake of keeping things simple, I have chosen to make this a terminal based application. It is entirely possible, using the SQLite backend to create a GUI using tkinter as taught in ENDG 311 further showing how we can comine concepts from the digital engineering course to create real world useful applications; making the game worth playing as David Perkins would put it. 
+
+Lastly, in the creation of this terminal based sale generator, I had realized that I needed a way to stop the sale from scanning through an item showing 0 in stock. This would create negative inventory and not be optimal in a real retail setting. To account for inventory issues found when scanning items and creating sales, i.e the computer showing no item in stock when the item is scanned, I have created a table called Reconcile which is generated in the function create_empty_reconcile_table defined in the file reconcoile.py. The purpose of this table is to record an inventory issue arises when scanning, noting what transaction this occured in, what the item upc is, the date of the transaction, as well as the status of whether or not the issue has been resolved. This table can be used internally by management to see where issues in inventory are and allow them to fix them. This table is intended to track inventory issues of small priced item and allow them to still be sold to the cusotmer. If a bike has an inventory issue then this warrants investigation and must be dealt with by someone immediately. This somewhat would mimic that of a real retail setting.
 
 ## Creating Transactions
 
-With the creation of these six interconnected tables we can start to create transaction and utilize the database. To emulate a real world setting, I have imagined that each time a person comes to the till with items a sales is started by running the file transactions.py, and thus using the terminal based process the employee can complete the sale.
+With the creation of these six interconnected tables we can start to create transaction and utilize the database. To emulate a real world setting, I have imagined that each time a person comes to the till with items a sale is started by running the file transactions.py, and thus using the terminal based process the employee can complete the sale.
 
-Through querying the database created, we can ensure only proper employee credentials, customers, and items are used in the creation of a sale, allowing us to have proper records which are useful to the business. I encourage you to practice querying different tables of the database and find some employee IDs, customer IDs, product UPC, and serial numbers for bicycles, and try and go through the process of creating a sale. Then I encourage you to go back into the database and query the Transactions table to see the records pop up, and also check the updated quantities. For some help getting started I will show you the process.
+Through querying the database created, we can ensure only proper employee credentials, customers, and items are used, allowing us to have proper records which are useful to the business. I encourage you to practice querying different tables of the database and find some employee IDs, customer IDs, product UPC, and serial numbers for bicycles, and try and go through the process of creating a sale. Then I encourage you to go back into the database and query the Transactions table to see the records pop up, and also check the updated quantities. For some help getting started I will show you the process.
+
+First off I am using the exact database tables that are seen above. As such for these transactions I will be using potentially different customer and employee IDs as well as different quantity on hand. In the end the system is the same, but I encourage you to query the database and find some customer IDs, employee IDs, UPCs (for Items with both 0 and non zero quantities), and serial numbers for respective items with matching UPCS. Feel free to enter in incorrect information as well, as I had designed routes to deal with incorrect information.
+
+
 
 
 
