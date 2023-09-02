@@ -134,7 +134,7 @@ For this motivating example, I looked to create a scenario around a hobby of min
 With this very over simplified table of one item transactions, a flaw begins to arise by changing the constant NUM_SALES to a larger number to mimic a busy sales day. In doing this, a simple 9 column table becomes super long and as such becomes more difficult to sift through for data. Furthermore, this table only considers simple one item transactions of a business; not taking into account transactions with more than one item. On top of that, there is way more information we can include about products, employees, and customers that if added would make this table huge! If we were to continue to add all of this to one table and format it as a CSV, it would be a horrendously large and jumbled up array of data. This is where a relational database structure can help.
 
 
-# Creating a Relational Database Model using SQLite
+## Creating a Relational Database Model using SQLite
 
 
 NOTE: In the creation of this database I used foreign key constraints between tables, something that needs to be enabled in sqlite. When I open bikeshop.sqlite in the terminal this is done by executing the query, "PRAGMA foreign_keys = ON;". In a python script this is the first line executed by the cursor to ensure that foreign key constraints, which I will cover later, are enabled. Furthermore, to revert to the initially created database I had generated, the file database_reset.py has to be run. As I go through the creation of each table I pretend as if the function to generate the other tables is not in the database_reset.py file, as they weren't when I created the database table by table. By resetting the database, this clears all transactions recorded, and all issues to be reconciled.
