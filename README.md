@@ -12,6 +12,7 @@
 6. [Creating a Relational Database Model using SQLite](#creating-a-relational-database-model-using-sqlite)
 7. [Conclusion](#conclusion)
 8. [References](#references)
+9. [Public Github Repository](#public-github-repository)
 
 ## Overview
 
@@ -240,3 +241,8 @@ In this blog post, I looked to venture further into SQL databases to prove the u
  - SQLite Documentation: https://www.sqlite.org/docs.html 
  - Education at Bat: Seven Principles for Educators: https://www.gse.harvard.edu/news/uk/09/01/education-bat-seven-principles-educators
  - Crud Operations in SQL: https://www.javatpoint.com/crud-operations-in-sql
+
+## Public Github Repository
+ Below is where all associated code for this blog post is located:
+
+ https://github.com/de-fellows/Why-SQL
